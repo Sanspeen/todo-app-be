@@ -5,6 +5,10 @@ export const getTasks = async (req, res) => {
     try {
 
         const tasks = await Task.find({});
+
+        if (!tasks){
+            return res.status(404).json({message: `There is no tasks to retrieve  `})
+        }
         res.status(200).json(tasks);    
         
     } catch (error) {
@@ -18,6 +22,11 @@ export const getTask = async (req, res) => {
 
         const {id} = req.params;
         const task = await Task.findById(id);
+
+
+        if (!task){
+            return res.status(404).json({message: `Cannot find any task with ${id} `})
+        }
         res.status(200).json(task);    
         
     } catch (error) {
@@ -30,9 +39,15 @@ export const getTask = async (req, res) => {
 export const createTasks = async (req, res) => {
     
     try {
-
+        
         const task = await Task.create(req.body)
+
+        if (!task){
+            return res.status(404).json({message: `Cannot find any task with  `})
+        }
         res.status(200).json(task);
+
+        
         
     } catch (error) {
         console.log(error.message);
@@ -47,7 +62,7 @@ export const updateTasks = async (req, res) => {
         const task = await Task.findByIdAndUpdate(id,req.body);
 
         if (!task){
-            return res.status(400).json({message: `Cannot find any task with ${id} `})
+            return res.status(404).json({message: `Cannot find any task with ${id} `})
         }
         const updatetask = await Task.findById(id,req.body);
         res.status(200).json(updatetask);
